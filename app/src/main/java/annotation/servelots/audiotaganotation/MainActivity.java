@@ -1,9 +1,24 @@
 package annotation.servelots.audiotaganotation;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.StrictMode;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.AbsListView;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,12 +32,11 @@ import java.net.URL;
 import java.nio.charset.Charset;
 
 public class MainActivity extends Activity {
-    TextView tv;
+
     String[] id, uploadDate, url;
-    String[][] tags;
-    String temp;
-    int[] i;
     JsonParse jp;
+    LinearLayout llParentLayout;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,24 +50,68 @@ public class MainActivity extends Activity {
         id = new String[jp.numberOfFiles()];
         uploadDate = new String[jp.numberOfFiles()];
         url = new String[jp.numberOfFiles()];
-        tags = new String[jp.numberOfFiles()][100];
-       // i = new int[jp.numberOfFiles()];
+
 
         id = jp.StringDataGetter("id");
         uploadDate = jp.StringDataGetter("uploadDate");
         url = jp.StringDataGetter("url");
-       // i = jp.TagDataGetter();
+
+        llParentLayout = (LinearLayout) findViewById(R.id.llParentLayout);
 
 
-        tv = (TextView) findViewById(R.id.tv);
-        for (int j = 0; j < jp.numberOfFiles(); j++) {
-
-           // temp = temp + "   :   " +i[j];
-        }
-        tv.setText(temp);
-
+        MakeViews(jp.numberOfFiles());
 
     }
 
+    public void MakeViews(int num) {
+        int j;
 
+        for (j = 0; j < num; j++) {
+            final int index = j;
+            // Container Layout
+            LinearLayout containerLayout = new LinearLayout(this);
+            containerLayout.setOrientation(LinearLayout.VERTICAL);
+
+            containerLayout.setGravity(Gravity.CENTER);
+            Resources res = getResources(); // resource handle
+            Drawable drawable = res.getDrawable(R.drawable.card);
+            containerLayout.setBackgroundDrawable(drawable);
+
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT);
+
+            layoutParams.setMargins(30, 20, 30, 0);
+
+
+            Button btnTitle = new Button(this);
+            btnTitle.setText(id[j]);
+            btnTitle.setGravity(Gravity.CENTER);
+            btnTitle.setWidth(AbsListView.LayoutParams.WRAP_CONTENT);
+            btnTitle.setHeight(AbsListView.LayoutParams.WRAP_CONTENT);
+            containerLayout.addView(btnTitle);
+            llParentLayout.addView(containerLayout, layoutParams);
+
+            btnTitle.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
+                    GoToPlayer(id[index], index, url[index], uploadDate[index]);
+                }
+            });
+
+
+        }
+    }
+
+    public void GoToPlayer(String s2, int index, String s, String s1) {
+
+        Intent i;
+        i = new Intent(MainActivity.this, AudioPlayer.class);
+        i.putExtra("indexKey", String.valueOf(index));
+        i.putExtra("dateKey", s1);
+        i.putExtra("urlKey", s);
+        i.putExtra("idKey", s2);
+        startActivity(i);
+
+
+    }
 }

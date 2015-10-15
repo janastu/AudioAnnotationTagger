@@ -1,18 +1,25 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+
+    android:orientation="vertical">
 
 
-    <TextView
-        android:id="@+id/tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_marginEnd="42dp"
-        android:layout_marginRight="42dp"
-        android:text="Large Text"
-        android:layout_alignParentTop="true" />
+    <ScrollView
 
-</RelativeLayout>
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:layout_gravity="center_horizontal">
+
+        <LinearLayout
+            android:id="@+id/llParentLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
