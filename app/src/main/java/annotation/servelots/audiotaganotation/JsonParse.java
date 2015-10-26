@@ -13,20 +13,23 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Adarsh on 10/12/2015.
  */
+
 public class JsonParse extends AsyncTask {
 
     String[] str;
-    String[][] tags;
-    int[] p;
+
+
     int i;
     JSONObject jsonFile = null, jsonObject;
-    JSONArray jArray = null, jInnerArray = null;
+    JSONArray jArray = null;
 
-    public void assignTheJson() {
+    public void AssignTheJson() {
         try {
             jsonFile = readJsonFromUrl("http://da.pantoto.org/api/files");
             jArray = jsonFile.getJSONArray("files");
@@ -38,16 +41,14 @@ public class JsonParse extends AsyncTask {
     }
 
     public int numberOfFiles() {
-        assignTheJson();
+        AssignTheJson();
         return jArray.length();
     }
 
     public String[] StringDataGetter(String key) {
         try {
-            assignTheJson();
-
+            AssignTheJson();
             str = new String[jArray.length()];
-
             for (i = 0; i < jArray.length(); i++) {
                 jsonObject = jArray.getJSONObject(i);
                 str[i] = jsonObject.get(key).toString();
@@ -58,36 +59,41 @@ public class JsonParse extends AsyncTask {
         return str;
     }
 
-    /*
-        public int[] TagDataGetter() {
-            try {
-                assignTheJson();
-                i = jArray.length();
-
-                tags = new String[i][100];//bad Programming. Must Change
-
-
-                p = new int[jArray.length()];
-
-                for (i = 0; i < jArray.length(); i++) {
-
-
-                    jInnerArray = jArray.getJSONArray(i);
-
-                    p[i] = jInnerArray.length();
-                    //tags[i][p[i]] = null;
-                    for (int j = 0; j < p[i]; j++) {
-                      //  tags[i][j] = String.valueOf(jInnerArray.get(j));
-                    }
-
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
+    public int TagDataSize(int i) {
+        String[] stringArray = new String[100];
+        try {
+            AssignTheJson();
+            jsonObject = jArray.getJSONObject(i);
+            JSONArray temp = jsonObject.getJSONArray("tags");
+            List<String> list = new ArrayList<String>();
+            for (int j = 0; i < temp.length(); i++) {
+                list.add(temp.getString(i));
             }
-            return p;
+            stringArray = list.toArray(new String[list.size()]);
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
+        return stringArray.length;
+    }
 
-    */
+    public String[] TagDataGetter(int i) {
+        String[] stringArray = new String[100];
+        try {
+            AssignTheJson();
+            jsonObject = jArray.getJSONObject(i);
+            JSONArray temp = jsonObject.getJSONArray("tags");
+            List<String> list = new ArrayList<String>();
+            for (int j = 0; i < temp.length(); i++) {
+                list.add(temp.getString(i));
+            }
+            stringArray = list.toArray(new String[list.size()]);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return stringArray;
+    }
+
+
     private static String readAll(Reader rd) throws IOException {
         StringBuilder sb = new StringBuilder();
         int cp;

@@ -18,7 +18,6 @@ public class MainActivity extends Activity {
     JsonParse jp;
     LinearLayout llParentLayout;
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,12 +65,13 @@ public class MainActivity extends Activity {
 
 
             Button btnTitle = new Button(this);
-            btnTitle.setText(id[j]);
             btnTitle.setGravity(Gravity.CENTER);
+            btnTitle.setText(id[j]);
             btnTitle.setWidth(AbsListView.LayoutParams.WRAP_CONTENT);
             btnTitle.setHeight(AbsListView.LayoutParams.WRAP_CONTENT);
             containerLayout.addView(btnTitle);
             llParentLayout.addView(containerLayout, layoutParams);
+
 
             btnTitle.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
@@ -91,6 +91,7 @@ public class MainActivity extends Activity {
         i.putExtra("dateKey", s1);
         i.putExtra("urlKey", s);
         i.putExtra("idKey", s2);
+
         startActivity(i);
 
 

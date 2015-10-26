@@ -6,6 +6,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -19,20 +20,24 @@ import java.io.IOException;
  */
 public class AudioPlayer extends Activity implements View.OnClickListener, View.OnTouchListener {
 
-    TextView tvTitle, tvUploadDate;
+    TextView tvTitle, tvUploadDate, tv;
     MediaPlayer mp;
     SeekBar seekBar;
 
     Handler handler;
 
     String url, uploadDate, id;
+    String[] qwe;
     int num;
     Intent i;
     Button btnPlay, btnPause, btnStop;
+    JsonParse jp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         setContentView(R.layout.audio_player);
         handler = new Handler();
 
@@ -41,7 +46,7 @@ public class AudioPlayer extends Activity implements View.OnClickListener, View.
         uploadDate = i.getStringExtra("dateKey");
         id = i.getStringExtra("idKey");
         num = Integer.valueOf(i.getStringExtra("indexKey"));
-
+        jp = new JsonParse();
 
         mp = new MediaPlayer();
         try {
@@ -53,6 +58,7 @@ public class AudioPlayer extends Activity implements View.OnClickListener, View.
 
         tvTitle = (TextView) findViewById(R.id.tvTitle);
         tvUploadDate = (TextView) findViewById(R.id.tvDate);
+        tv = (TextView) findViewById(R.id.tv);
         btnPlay = (Button) findViewById(R.id.btnPlay);
         btnPause = (Button) findViewById(R.id.btnPause);
         btnStop = (Button) findViewById(R.id.btnStop);
@@ -70,6 +76,12 @@ public class AudioPlayer extends Activity implements View.OnClickListener, View.
         seekBar.setProgress(0);
         seekBar.setMax(mp.getDuration());
 
+        qwe = new String[100];
+        qwe = jp.TagDataGetter(num);
+
+        // tv.setText(qwe[0]);
+
+
     }
 
 
@@ -82,6 +94,7 @@ public class AudioPlayer extends Activity implements View.OnClickListener, View.
             case R.id.btnStop:
                 mp.stop();
                 mp.reset();
+                mp.release();
                 mp = new MediaPlayer();
                 try {
                     mp.setDataSource(Uri.decode(url));
@@ -125,10 +138,12 @@ public class AudioPlayer extends Activity implements View.OnClickListener, View.
         }
     }
 
+
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        mp.stop();
-        mp.release();
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+            finish();
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }
